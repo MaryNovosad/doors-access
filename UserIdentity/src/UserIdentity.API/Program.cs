@@ -8,14 +8,12 @@ builder.Services.AddRazorPages();
 builder.Services.AddIdentityServer()
     .AddInMemoryClients(IdentityConfiguration.Clients)
     .AddInMemoryIdentityResources(IdentityConfiguration.IdentityResources)
-    .AddInMemoryApiResources(IdentityConfiguration.ApiResources)
     .AddInMemoryApiScopes(IdentityConfiguration.ApiScopes)
     .AddTestUsers(IdentityConfiguration.TestUsers.ToList())
     .AddDeveloperSigningCredential();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");

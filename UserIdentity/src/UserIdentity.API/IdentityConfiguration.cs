@@ -8,15 +8,43 @@ namespace UserIdentity.API;
 
 internal class IdentityConfiguration
 {
-    public static IEnumerable<Client> Clients { get; set; }
+    public static IEnumerable<Client> Clients =>
+        new List<Client>
+        {
+            new ()
+            {
+                ClientId = "Clay mobile application",
+                AllowedGrantTypes = GrantTypes.Code,
+
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                },
+
+                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "DoorAccessAPI"
+                }
+            }
+        };
+
     public static IEnumerable<IdentityResource> IdentityResources =>
         new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
             new IdentityResources.Profile(),
         };
-    public static IEnumerable<ApiResource> ApiResources { get; set; }
-    public static IEnumerable<ApiScope> ApiScopes { get; set; }
+
+    public static IEnumerable<ApiScope> ApiScopes =>
+        new List<ApiScope>
+        {
+            new ("DoorAccessAPI", "Door Access API")
+        };
 
     public static IEnumerable<TestUser> TestUsers =>
         new List<TestUser>
