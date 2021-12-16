@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using DoorsAccess.API.Responses;
 using DoorsAccess.DAL;
@@ -31,8 +33,24 @@ namespace DoorsAccess.API.Controllers
         }
 
         [HttpGet("user/{userId:long}")]
-        public async Task<DoorsAccessHistoryResponse> Get(long userId)
+        public async Task<ActionResult<DoorsAccessHistoryResponse>> Get(long userId)
         {
+            if (!HttpContext.User.IsInRole("Admin"))
+            {
+                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+
+                if (userIdClaim == null)
+                {
+                    throw new InvalidOperationException($"User principal info is not complete: claim {ClaimTypes.NameIdentifier} is missing");
+                }
+
+                long.TryParse(userIdClaim.Value, out long userIdFromClaim);
+
+                if (userIdFromClaim != userId)
+                {
+                    return Forbid();
+                }
+            }
             var doorEvents = await _doorsAccessHistoryService.GetDoorAccessHistoryAsync(userId);
 
             return CreateDoorsAccessHistoryResponse(doorEvents);
@@ -48,7 +66,7 @@ namespace DoorsAccess.API.Controllers
                     DoorId = l.DoorId,
                     DoorName = l.DoorName,
                     IsDoorDeactivated = l.IsDoorDeactivated,
-                    Event = (Responses.DoorState)l.Event,
+                    Event = (Responses.DoorEvent)l.Event,
                     TimeStamp = l.TimeStamp
                 }).ToList()
             };

@@ -1,15 +1,8 @@
 ﻿using DoorsAccess.API;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +13,8 @@ namespace DoorsAccess.IntegrationTests.SetUp
         private readonly IConfiguration _config;
         private readonly TestServer _testServer;
         private readonly DbInstaller _dbInstaller;
+
+        protected const long TestDoorId = 1;
 
         protected const long TestUserId = 2;
         protected const string TestUserRole = "User";
@@ -68,13 +63,6 @@ namespace DoorsAccess.IntegrationTests.SetUp
             httpClient.DefaultRequestHeaders.Add(TestHttpHeaders.Role, role);
 
             return httpClient;
-        }
-    }
-
-    public class TestStartup : Startup
-    {
-        public TestStartup(IConfiguration configuration) : base(configuration)
-        {
         }
     }
 }

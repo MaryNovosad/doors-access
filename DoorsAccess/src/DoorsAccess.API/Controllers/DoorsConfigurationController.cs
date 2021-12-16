@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using DoorsAccess.API.Requests;
+using DoorsAccess.API.Responses;
+using DoorsAccess.DAL;
 using DoorsAccess.Domain;
 using DoorsAccess.Domain.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -19,13 +21,27 @@ namespace DoorsAccess.API.Controllers
             _doorsConfigurationService = doorsConfigurationService;
         }
 
+        [HttpGet("{doorId:long}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult<GetDoorResponse>> GetDoor(long doorId)
+        {
+            var door = await _doorsConfigurationService.GetDoorAsync(doorId);
+
+            if (door == null)
+            {
+                return NotFound();
+            }
+
+            return MapDoorResponse(door);
+        }
+
         [HttpPut("{doorId:long}")]
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateOrUpdateDoor(long doorId, [FromBody] CreateOrUpdateDoorRequest request)
         {
             await _doorsConfigurationService.CreateOrUpdateDoorAsync(MapDoorInfo(request));
 
-            return Ok(doorId);
+            return Ok();
         }
 
         [HttpPatch("{doorId:long}")]
@@ -42,6 +58,19 @@ namespace DoorsAccess.API.Controllers
                 Id = request.DoorId,
                 IsDeactivated = request.IsDeactivated,
                 Name = request.DoorName
+            };
+        }
+
+        private GetDoorResponse MapDoorResponse(Door door)
+        {
+            return new GetDoorResponse
+            {
+                Id = door.Id,
+                Name = door.Name,
+                CreatedAt = door.CreatedAt,
+                UpdatedAt = door.UpdatedAt,
+                State = (Responses.DoorState)door.State,
+                IsDeactivated = door.IsDeactivated
             };
         }
     }

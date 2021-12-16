@@ -9,5 +9,5 @@ public class DoorEventLog
     public bool IsDoorDeactivated { get; set; }
     public long UserId { get; set; }
     public DateTime TimeStamp { get; set; }
-    public DoorState Event { get; set; }
+    public DoorEvent Event { get; set; }
 }

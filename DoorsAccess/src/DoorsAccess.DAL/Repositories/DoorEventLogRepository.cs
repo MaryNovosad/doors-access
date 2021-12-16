@@ -23,7 +23,6 @@ namespace DoorsAccess.DAL.Repositories
             await connection.ExecuteAsync(command, doorEventLog);
         }
 
-        // time range param?
         public async Task<IList<DetailedDoorEventLog>> GetAllAsync()
         {
             await using var connection = new SqlConnection(_connectionString);
@@ -36,7 +35,6 @@ namespace DoorsAccess.DAL.Repositories
             return (await connection.QueryAsync<DetailedDoorEventLog>(query)).ToList();
         }
 
-        // time range param?
         public async Task<IList<DetailedDoorEventLog>> GetAsync(long userId)
         {
             await using var connection = new SqlConnection(_connectionString);

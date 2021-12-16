@@ -24,13 +24,13 @@ namespace DoorsAccess.API.Controllers
         }
 
         [HttpPut("{doorId:long}/state/open")]
-        public async Task<IActionResult> OpenDoor(int doorId)
+        public async Task<IActionResult> OpenDoor(long doorId)
         {
-            var userIdClaim = HttpContext.User.Claims.ToList().FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null)
             {
-                throw new ArgumentException();
+                throw new InvalidOperationException($"User principal info is not complete: claim {ClaimTypes.NameIdentifier} is missing");
             }
 
             long.TryParse(userIdClaim.Value, out long userId);

@@ -49,6 +49,11 @@ public class DoorsConfigurationService: IDoorsConfigurationService
         }
     }
 
+    public async Task<Door?> GetDoorAsync(long doorId)
+    {
+        return await _doorRepository.GetAsync(doorId);
+    }
+
     private bool DoorInfoHasChanged(Door existingDoor, DoorInfo doorInfo) =>
         existingDoor.Name != doorInfo.Name || existingDoor.IsDeactivated != doorInfo.IsDeactivated;
 }

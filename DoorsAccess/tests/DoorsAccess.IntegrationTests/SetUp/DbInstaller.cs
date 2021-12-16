@@ -16,7 +16,7 @@ namespace DoorsAccess.IntegrationTests.SetUp
         public void SetUp()
         {
             CreateDbIfNotExists();
-            RunMigrationScripts(@"..\..\..\..\DoorsAccess.Database", _connectionString);
+            RunMigrationScripts(@"..\..\..\..\..\db", _connectionString);
         }
 
         public async Task ResetAsync()
