@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
@@ -10,15 +6,12 @@ using DoorsAccess.Domain.DTOs;
 using Moq;
 using NUnit.Framework;
 
-namespace DoorsAccess.UnitTests
+namespace DoorsAccess.UnitTests.Tests
 {
-    // namings
-    public class DoorsConfigurationTests
+    public class CreateOrUpdateDoorTests
     {
         private Mock<IDoorRepository> _doorRepositoryMock;
         private IDoorsConfigurationService _doorConfigurationService;
-
-        const long TestDoorId = 1;
 
         [SetUp]
         public void Setup()
@@ -33,7 +26,7 @@ namespace DoorsAccess.UnitTests
         {
             // Arrange
             var doorToCreate = GetTestDoor();
-            _doorRepositoryMock.Setup(r => r.GetAsync(TestDoorId)).ReturnsAsync((Door?)null);
+            _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync((Door?)null);
 
             // Act
             await _doorConfigurationService.CreateOrUpdateDoorAsync(doorToCreate);
@@ -52,17 +45,17 @@ namespace DoorsAccess.UnitTests
         {
             // Arrange
             var existingDoor = TestDoorFactory.Create();
-            var doorsToUpdate = GetTestDoor(isDeactivated: true);
+            var doorToUpdate = GetTestDoor(isDeactivated: true);
 
-            _doorRepositoryMock.Setup(r => r.GetAsync(TestDoorId)).ReturnsAsync(existingDoor);
+            _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(existingDoor);
 
             // Act
-            await _doorConfigurationService.CreateOrUpdateDoorAsync(doorsToUpdate);
+            await _doorConfigurationService.CreateOrUpdateDoorAsync(doorToUpdate);
 
             // Assert
             _doorRepositoryMock.Verify(r =>
                     r.UpdateAsync(It.Is<Door>(d =>
-                        d.Id == doorsToUpdate.Id && d.Name == doorsToUpdate.Name && d.IsDeactivated == doorsToUpdate.IsDeactivated
+                        d.Id == doorToUpdate.Id && d.Name == doorToUpdate.Name && d.IsDeactivated == doorToUpdate.IsDeactivated
                         && d.State == DoorState.Closed && d.UpdatedAt != existingDoor.UpdatedAt)),
                 Times.Once);
 
@@ -70,7 +63,7 @@ namespace DoorsAccess.UnitTests
         }
 
         [Test]
-        public async Task When_DoorExists_But_NothingChanged_Then_DoorIsUpdated()
+        public async Task When_DoorExists_But_NothingChanged_Then_DoorIsNotUpdated()
         {
             // Arrange
             var existingDoor = TestDoorFactory.Create();
@@ -81,7 +74,7 @@ namespace DoorsAccess.UnitTests
                 Name = existingDoor.Name
             };
 
-            _doorRepositoryMock.Setup(r => r.GetAsync(TestDoorId)).ReturnsAsync(existingDoor);
+            _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(existingDoor);
 
             // Act
             await _doorConfigurationService.CreateOrUpdateDoorAsync(doorsToUpdate);
@@ -95,7 +88,7 @@ namespace DoorsAccess.UnitTests
         {
             return new DoorInfo
             {
-                Id = TestDoorId,
+                Id = TestConstants.DoorId,
                 Name = "Test door",
                 IsDeactivated = isDeactivated
             };
