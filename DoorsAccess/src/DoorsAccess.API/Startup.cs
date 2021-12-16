@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using DoorsAccess.API.Infrastructure;
+using DoorsAccess.Domain.Utils;
 using DoorsAccess.IoT.Integration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -36,6 +37,8 @@ namespace DoorsAccess.API
             services.AddTransient<IDoorRepository>(_ => new DoorRepository(dbConnectionString));
             services.AddTransient<IDoorAccessRepository>(_ => new DoorAccessRepository(dbConnectionString));
             services.AddTransient<IDoorEventLogRepository>(_ => new DoorEventLogRepository(dbConnectionString));
+
+            services.AddSingleton<IClock, Clock>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>

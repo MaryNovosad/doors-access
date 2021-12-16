@@ -1,22 +1,25 @@
 ﻿using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.DTOs;
+using DoorsAccess.Domain.Utils;
 
 namespace DoorsAccess.Domain;
 
-public class DoorsConfigurationService: IDoorsConfigurationService
+public class DoorsConfigurationService : IDoorsConfigurationService
 {
     private readonly IDoorRepository _doorRepository;
+    private readonly IClock _clock;
 
-    public DoorsConfigurationService(IDoorRepository doorRepository)
+    public DoorsConfigurationService(IDoorRepository doorRepository, IClock clock)
     {
         _doorRepository = doorRepository;
+        _clock = clock;
     }
 
     public async Task CreateOrUpdateDoorAsync(DoorInfo doorInfo)
     {
         var existingDoor = await _doorRepository.GetAsync(doorInfo.Id);
-        var utcDateTime = DateTime.UtcNow;
+        var utcDateTime = _clock.UtcNow();
 
         if (existingDoor != null)
         {

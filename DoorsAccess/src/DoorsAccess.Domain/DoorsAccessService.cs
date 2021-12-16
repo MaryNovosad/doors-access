@@ -1,6 +1,7 @@
 ﻿using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.Exceptions;
+using DoorsAccess.Domain.Utils;
 using DoorsAccess.IoT.Integration;
 
 namespace DoorsAccess.Domain
@@ -11,14 +12,16 @@ namespace DoorsAccess.Domain
         private readonly IDoorAccessRepository _doorAccessRepository;
         private readonly IIoTDeviceProxy _ioTDeviceProxy;
         private readonly IDoorEventLogRepository _doorEventLogRepository;
+        private readonly IClock _clock;
 
         public DoorsAccessService(IDoorRepository doorRepository, IDoorAccessRepository doorAccessRepository,
-            IIoTDeviceProxy ioTDoorProxy, IDoorEventLogRepository doorEventLogRepository)
+            IIoTDeviceProxy ioTDoorProxy, IDoorEventLogRepository doorEventLogRepository, IClock clock)
         {
             _doorRepository = doorRepository;
             _doorAccessRepository = doorAccessRepository;
             _ioTDeviceProxy = ioTDoorProxy;
             _doorEventLogRepository = doorEventLogRepository;
+            _clock = clock;
         }
 
         public async Task OpenDoorAsync(long doorId, long userId)
@@ -37,7 +40,7 @@ namespace DoorsAccess.Domain
                 DoorId = door.Id,
                 UserId = userId,
                 Event = doorEvent,
-                TimeStamp = DateTime.UtcNow
+                TimeStamp = _clock.UtcNow()
             };
 
             await _doorEventLogRepository.AddAsync(doorEventLog);
@@ -70,7 +73,7 @@ namespace DoorsAccess.Domain
             var existingDoorAccesses = await _doorAccessRepository.GetAsync(doorId);
             var existingUsersIds = existingDoorAccesses.Select(a => a.UserId);
 
-            var utcNow = DateTime.UtcNow;
+            var utcNow = _clock.UtcNow();
 
             var newAccesses = usersIds.Distinct().Except(existingUsersIds).Select(id => new DoorAccess
             {
