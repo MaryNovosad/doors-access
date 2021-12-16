@@ -2,6 +2,7 @@ using UserIdentity.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddIdentityServer()
@@ -21,10 +22,12 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseStaticFiles();
 app.UseRouting();
 
 app.UseIdentityServer();
 app.UseAuthorization();
+app.UseEndpoints(e => e.MapDefaultControllerRoute());
 
 app.Run();
 

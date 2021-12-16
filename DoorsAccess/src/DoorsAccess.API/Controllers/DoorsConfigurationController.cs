@@ -20,7 +20,7 @@ namespace DoorsAccess.API.Controllers
         }
 
         [HttpPut("{doorId:long}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateOrUpdateDoor(long doorId, [FromBody] CreateOrUpdateDoorRequest request)
         {
             await _doorsConfigurationService.CreateOrUpdateDoorAsync(MapDoorInfo(request));

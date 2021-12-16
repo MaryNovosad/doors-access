@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace DoorsAccess.API.Controllers
@@ -25,7 +26,7 @@ namespace DoorsAccess.API.Controllers
         [HttpPut("{doorId:long}/state/open")]
         public async Task<IActionResult> OpenDoor(int doorId)
         {
-            var userIdClaim = HttpContext.User.Claims.ToList().FirstOrDefault(c => c.Type == "UserId");
+            var userIdClaim = HttpContext.User.Claims.ToList().FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             if (userIdClaim == null)
             {

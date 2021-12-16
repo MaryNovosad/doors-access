@@ -33,8 +33,6 @@ namespace DoorsAccess.API.Controllers
         [HttpGet("user/{userId:long}")]
         public async Task<DoorsAccessHistoryResponse> Get(long userId)
         {
-            // User can't get other users data!!! unless it's admin
-
             var doorEvents = await _doorsAccessHistoryService.GetDoorAccessHistoryAsync(userId);
 
             return CreateDoorsAccessHistoryResponse(doorEvents);
