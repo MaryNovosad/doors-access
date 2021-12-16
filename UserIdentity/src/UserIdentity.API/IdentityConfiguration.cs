@@ -13,7 +13,7 @@ internal class IdentityConfiguration
         {
             new ()
             {
-                ClientId = "Clay mobile application",
+                ClientId = "Clay",
                 AllowedGrantTypes = GrantTypes.Code,
 
                 ClientSecrets =
@@ -21,8 +21,8 @@ internal class IdentityConfiguration
                     new Secret("secret".Sha256())
                 },
 
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
-                PostLogoutRedirectUris = { "https://localhost:5002/signout-callback-oidc" },
+                RedirectUris = { "https://localhost:5001/signin-oidc" },
+                PostLogoutRedirectUris = { "https://localhost:5001/signout-callback-oidc" },
 
                 AllowedScopes = new List<string>
                 {

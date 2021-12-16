@@ -1,5 +1,3 @@
-using System.Net.Mime;
-using System.Threading.Tasks;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -12,6 +10,7 @@ using DoorsAccess.API.Infrastructure;
 using DoorsAccess.IoT.Integration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
 {
@@ -38,7 +37,15 @@ namespace DoorsAccess.API
             services.AddTransient<IDoorAccessRepository>(_ => new DoorAccessRepository(dbConnectionString));
             services.AddTransient<IDoorEventLogRepository>(_ => new DoorEventLogRepository(dbConnectionString));
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme);
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.Authority = "https://localhost:7133";
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
 
             services.AddControllers(options =>
             {

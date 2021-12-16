@@ -2,7 +2,6 @@ using UserIdentity.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddRazorPages();
 
 builder.Services.AddIdentityServer()
@@ -24,8 +23,9 @@ app.UseHttpsRedirection();
 
 app.UseRouting();
 
+app.UseIdentityServer();
 app.UseAuthorization();
 
 app.Run();
 
-app.UseIdentityServer();
+
