@@ -12,8 +12,8 @@ public class TestDoorFactory
             Id = doorId,
             Name = doorName,
             IsDeactivated = isDeactivated,
-            CreatedAt = new DateTime(2021, 12, 1),
-            UpdatedAt = new DateTime(2021, 12, 1),
+            CreatedAt = TestConstants.DoorDateTime,
+            UpdatedAt = TestConstants.DoorDateTime,
             State = DoorState.Closed
         };
     }
