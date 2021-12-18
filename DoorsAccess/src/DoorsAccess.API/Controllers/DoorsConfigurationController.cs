@@ -46,9 +46,11 @@ namespace DoorsAccess.API.Controllers
 
         [HttpPatch("{doorId:long}")]
         [Authorize(Roles = "Admin")]
-        public Task<IActionResult> ChangeDoorActivationState(long doorId, bool isActivated)
+        public async Task<IActionResult> ChangeDoorActivationState(long doorId, bool isActivated)
         {
-            throw new NotImplementedException();
+            await _doorsConfigurationService.ChangeActivationStateAsync(doorId, isActivated);
+
+            return Ok();
         }
 
         private DoorInfo MapDoorInfo(CreateOrUpdateDoorRequest request)

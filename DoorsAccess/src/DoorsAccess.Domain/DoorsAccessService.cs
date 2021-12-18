@@ -3,6 +3,7 @@ using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.Exceptions;
 using DoorsAccess.Domain.Utils;
 using DoorsAccess.IoT.Integration;
+using Microsoft.Extensions.Logging;
 
 namespace DoorsAccess.Domain
 {
@@ -13,15 +14,17 @@ namespace DoorsAccess.Domain
         private readonly IIoTDeviceProxy _ioTDeviceProxy;
         private readonly IDoorEventLogRepository _doorEventLogRepository;
         private readonly IClock _clock;
+        private readonly ILogger<DoorsAccessService> _logger;
 
         public DoorsAccessService(IDoorRepository doorRepository, IDoorAccessRepository doorAccessRepository,
-            IIoTDeviceProxy ioTDoorProxy, IDoorEventLogRepository doorEventLogRepository, IClock clock)
+            IIoTDeviceProxy ioTDoorProxy, IDoorEventLogRepository doorEventLogRepository, IClock clock, ILogger<DoorsAccessService> logger)
         {
             _doorRepository = doorRepository;
             _doorAccessRepository = doorAccessRepository;
             _ioTDeviceProxy = ioTDoorProxy;
             _doorEventLogRepository = doorEventLogRepository;
             _clock = clock;
+            _logger = logger;
         }
 
         public async Task OpenDoorAsync(long doorId, long userId)
@@ -56,13 +59,14 @@ namespace DoorsAccess.Domain
                 case DoorEvent.DeactivatedDoorAccessAttempt:
                     throw new DomainException(DomainErrorType.NotFound, $"User {userId} tries to access deactivated door {doorId}");
                 default:
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("Door event is not supported");
             }
+
+            _logger.LogInformation($"Door {doorId} access was granted to user {userId}");
         }
 
         public async Task AllowDoorAccessAsync(long doorId, IList<long> usersIds)
         {
-            // if doors are deactivated?
             var door = await _doorRepository.GetAsync(doorId);
 
             if (door == null)
@@ -93,6 +97,8 @@ namespace DoorsAccess.Domain
             }).ToList();
 
             await _doorAccessRepository.UpdateAsync(accessesToRevoke);
+
+            _logger.LogInformation($"Users {string.Join(", ", usersIds)} are allowed to access door {doorId}");
         }
 
         private async Task<DoorEvent> DetermineDoorEventAsync(Door door, long userId)

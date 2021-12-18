@@ -5,6 +5,7 @@ using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using DoorsAccess.Domain.DTOs;
 using DoorsAccess.Domain.Utils;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 
@@ -23,8 +24,9 @@ namespace DoorsAccess.UnitTests.Tests
             _doorRepositoryMock = new Mock<IDoorRepository>();
             _clockMock = new Mock<IClock>();
             _clockMock.Setup(c => c.UtcNow()).Returns(() => _dateTimeNow);
+            var loggerMock = new Mock<ILogger<DoorsConfigurationService>>();
 
-            _doorConfigurationService = new DoorsConfigurationService(_doorRepositoryMock.Object, _clockMock.Object);
+            _doorConfigurationService = new DoorsConfigurationService(_doorRepositoryMock.Object, _clockMock.Object, loggerMock.Object);
         }
 
         [Test]

@@ -2,6 +2,7 @@
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.DTOs;
 using DoorsAccess.Domain.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace DoorsAccess.Domain;
 
@@ -9,11 +10,13 @@ public class DoorsConfigurationService : IDoorsConfigurationService
 {
     private readonly IDoorRepository _doorRepository;
     private readonly IClock _clock;
+    private readonly ILogger<DoorsConfigurationService> _logger;
 
-    public DoorsConfigurationService(IDoorRepository doorRepository, IClock clock)
+    public DoorsConfigurationService(IDoorRepository doorRepository, IClock clock, ILogger<DoorsConfigurationService> logger)
     {
         _doorRepository = doorRepository;
         _clock = clock;
+        _logger = logger;
     }
 
     public async Task CreateOrUpdateDoorAsync(DoorInfo doorInfo)
@@ -35,6 +38,8 @@ public class DoorsConfigurationService : IDoorsConfigurationService
                 };
 
                 await _doorRepository.UpdateAsync(updatedDoor);
+
+                _logger.LogInformation($"Door {updatedDoor.Id} is updated");
             }
         }
         else
@@ -49,7 +54,16 @@ public class DoorsConfigurationService : IDoorsConfigurationService
             };
 
             await _doorRepository.CreateAsync(newDoor);
+
+            _logger.LogInformation($"Door {newDoor.Id} is created");
         }
+    }
+
+    public async Task ChangeActivationStateAsync(long doorId, bool isActivated)
+    {
+        await _doorRepository.ChangeActivationStateAsync(doorId, isActivated);
+
+        _logger.LogInformation($"Door {doorId} is {(isActivated ? "" : "de")}activated");
     }
 
     public async Task<Door?> GetDoorAsync(long doorId)

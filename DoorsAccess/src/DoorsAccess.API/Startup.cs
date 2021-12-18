@@ -1,3 +1,5 @@
+using System;
+using System.Net;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -5,12 +7,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using DoorsAccess.API.Infrastructure;
+using DoorsAccess.Domain.Exceptions;
 using DoorsAccess.Domain.Utils;
 using DoorsAccess.IoT.Integration;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
@@ -40,42 +44,28 @@ namespace DoorsAccess.API
 
             services.AddSingleton<IClock, Clock>();
 
+            var authConfiguration = Configuration.GetSection("Authentication");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
                 {
-                    options.Authority = "https://localhost:7133";
+                    options.Authority = authConfiguration.GetValue<string>("IdentityServerUrl");
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateAudience = false
                     };
                 });
 
-            services.AddControllers(options =>
-            {
-                options.Filters.Add<HttpResponseExceptionFilter>();
-            });
-
+            services.AddLogging();
+            services.AddControllers();
             services.AddSwaggerGen();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler(c => c.Run(async context =>
-                {
-                    var exception = context.Features
-                        .Get<IExceptionHandlerPathFeature>()
-                        .Error;
-                    var response = new { error = exception.Message };
-                    await context.Response.WriteAsJsonAsync(response);
-                }));
-                app.UseHsts();
-            }
+            app.ConfigureExceptionHandler();
+
+            app.UseHsts();
 
             app.UseHttpsRedirection();
             app.UseSwagger();
