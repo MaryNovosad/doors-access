@@ -6,7 +6,6 @@ namespace DoorsAccess.IntegrationTests
 {
     public class DoorsAccessAPIProxy
     {
-
         public static async Task<HttpResponseMessage> AllowDoorAccessAsync(HttpClient httpClient, long doorId, AllowDoorAccessRequest request)
         {
             return await httpClient.PutAsJsonAsync($"v1/doors/{doorId}/access", request);

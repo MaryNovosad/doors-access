@@ -4,7 +4,7 @@ using DoorsAccess.API.Requests;
 using DoorsAccess.API.Responses;
 using DoorsAccess.DAL;
 using DoorsAccess.Domain;
-using DoorsAccess.Domain.DTOs;
+using DoorsAccess.Domain.DTO;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

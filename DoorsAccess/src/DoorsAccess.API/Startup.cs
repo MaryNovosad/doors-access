@@ -1,5 +1,3 @@
-using System;
-using System.Net;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -8,13 +6,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DoorsAccess.API.Infrastructure;
-using DoorsAccess.Domain.Exceptions;
 using DoorsAccess.Domain.Utils;
 using DoorsAccess.IoT.Integration;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
@@ -63,7 +56,7 @@ namespace DoorsAccess.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.ConfigureExceptionHandler();
+            app.ConfigureExceptionMiddleware();
 
             app.UseHsts();
 

@@ -1,4 +1,4 @@
-﻿namespace DoorsAccess.Domain.DTOs;
+﻿namespace DoorsAccess.Domain.DTO;
 
 public class DoorInfo
 {

@@ -14,6 +14,7 @@ namespace DoorsAccess.UnitTests.Tests
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create());
             _doorAccessRepositoryMock.Setup(r => r.CanAccessAsync(TestConstants.UserId, TestConstants.DoorId)).ReturnsAsync(() => true);
+            
             // Act
             await _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId);
 
@@ -27,6 +28,7 @@ namespace DoorsAccess.UnitTests.Tests
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create());
             _doorAccessRepositoryMock.Setup(r => r.CanAccessAsync(TestConstants.UserId, TestConstants.DoorId)).ReturnsAsync(() => true);
+            
             // Act
             await _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId);
 
@@ -40,6 +42,7 @@ namespace DoorsAccess.UnitTests.Tests
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create());
             _doorAccessRepositoryMock.Setup(r => r.CanAccessAsync(TestConstants.UserId, TestConstants.DoorId)).ReturnsAsync(() => true);
+            
             // Act
             await _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId);
 
@@ -80,7 +83,6 @@ namespace DoorsAccess.UnitTests.Tests
             _doorRepositoryMock.Verify(r => r.ChangeStateAsync(TestConstants.DoorId, It.IsAny<DoorState>()), Times.Never);
         }
 
-        //
         [Test]
         public void When_DoorExists_But_UserDoesNotHaveDoorAccess_Then_DomainExceptionIsThrown()
         {

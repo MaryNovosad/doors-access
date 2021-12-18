@@ -1,4 +1,3 @@
-using System;
 using DoorsAccess.DAL;
 
 namespace DoorsAccess.UnitTests;

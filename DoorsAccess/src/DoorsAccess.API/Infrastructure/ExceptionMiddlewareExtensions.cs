@@ -12,7 +12,7 @@ namespace DoorsAccess.API.Infrastructure
 {
     public static class ExceptionMiddlewareExtensions
     {
-        public static void ConfigureExceptionHandler(this IApplicationBuilder app)
+        public static void ConfigureExceptionMiddleware(this IApplicationBuilder app)
         {
             var logger = app.ApplicationServices.GetService<ILogger<IApplicationBuilder>>();
 

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
-using DoorsAccess.Domain.DTOs;
+using DoorsAccess.Domain.DTO;
 using DoorsAccess.Domain.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -42,8 +42,9 @@ namespace DoorsAccess.UnitTests.Tests
 
             // Assert
             _doorRepositoryMock.Verify(r =>
-                r.CreateAsync(It.Is<Door>(d => d.Id == doorToCreate.Id && d.Name == doorToCreate.Name && d.IsDeactivated == doorToCreate.IsDeactivated 
-                                               && d.State == DoorState.Closed && d.CreatedAt == _dateTimeNow && d.UpdatedAt == _dateTimeNow)),
+                r.CreateAsync(It.Is<Door>(d => 
+                    d.Id == doorToCreate.Id && d.Name == doorToCreate.Name && d.IsDeactivated == doorToCreate.IsDeactivated 
+                    && d.State == DoorState.Closed && d.CreatedAt == _dateTimeNow && d.UpdatedAt == _dateTimeNow)),
                 Times.Once);
 
             _doorRepositoryMock.Verify(r => r.UpdateAsync(It.IsAny<Door>()), Times.Never);

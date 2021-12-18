@@ -42,6 +42,7 @@ namespace DoorsAccess.IntegrationTests.Tests
             // Arrange
             using var userHttpClient = CreateHttpClient();
             using var adminHttpClient = CreateHttpClient(TestConstants.TestAdminId, TestConstants.TestAdminRole);
+
             await DoorsAccessAPIProxy.CreateDoorAsync(adminHttpClient, new CreateOrUpdateDoorRequest
             {
                 DoorId = TestConstants.TestDoorId,

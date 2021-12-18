@@ -1,6 +1,6 @@
 ﻿using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
-using DoorsAccess.Domain.DTOs;
+using DoorsAccess.Domain.DTO;
 using DoorsAccess.Domain.Utils;
 using Microsoft.Extensions.Logging;
 

@@ -6,7 +6,7 @@ namespace DoorsAccess.API.Responses
     {
         public long Id { get; set; }
 
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         public DoorState State { get; set; }
 
