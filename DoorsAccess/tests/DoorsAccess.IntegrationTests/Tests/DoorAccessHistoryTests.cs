@@ -4,7 +4,7 @@ using DoorsAccess.API.Responses;
 using DoorsAccess.IntegrationTests.SetUp;
 using NUnit.Framework;
 
-namespace DoorsAccess.IntegrationTests
+namespace DoorsAccess.IntegrationTests.Tests
 {
     public class DoorAccessHistoryTests: IntegrationTestBase
     {
@@ -12,7 +12,7 @@ namespace DoorsAccess.IntegrationTests
         public async Task When_NoDoorAccessEventsExist_Then_OkStatusCodeWithEmptyCollectionIsReturned()
         {
             // Arrange
-            using var adminHttpClient = CreateHttpClient(TestAdminId, TestAdminRole);
+            using var adminHttpClient = CreateHttpClient(TestConstants.TestAdminId, TestConstants.TestAdminRole);
 
             // Act
             var userDoorAccessHistory = await DoorsAccessAPIProxy.GetDoorAccessHistoryAsync(adminHttpClient);
@@ -27,7 +27,7 @@ namespace DoorsAccess.IntegrationTests
         {
             // Arrange
             using var httpClient = CreateHttpClient();
-            var otherUserId = TestUserId + 1;
+            var otherUserId = TestConstants.TestUserId + 1;
 
             // Act
             var userDoorAccessHistory = await DoorsAccessAPIProxy.GetDoorAccessHistoryAsync(httpClient, otherUserId);
@@ -41,27 +41,27 @@ namespace DoorsAccess.IntegrationTests
         {
             // Arrange
             using var userHttpClient = CreateHttpClient();
-            using var adminHttpClient = CreateHttpClient(TestAdminId, TestAdminRole);
+            using var adminHttpClient = CreateHttpClient(TestConstants.TestAdminId, TestConstants.TestAdminRole);
             await DoorsAccessAPIProxy.CreateDoorAsync(adminHttpClient, new CreateOrUpdateDoorRequest
             {
-                DoorId = TestDoorId,
-                DoorName = "Clay office entrance door",
+                DoorId = TestConstants.TestDoorId,
+                DoorName = TestConstants.TestDoorName,
                 IsDeactivated = false
             });
-            await DoorsAccessAPIProxy.AllowDoorAccessAsync(adminHttpClient, TestDoorId, new AllowDoorAccessRequest
+            await DoorsAccessAPIProxy.AllowDoorAccessAsync(adminHttpClient, TestConstants.TestDoorId, new AllowDoorAccessRequest
             {
-                UsersIds = new List<long> { TestUserId }
+                UsersIds = new List<long> { TestConstants.TestUserId }
             });
-            await DoorsAccessAPIProxy.OpenDoorAsync(userHttpClient, TestDoorId);
+            await DoorsAccessAPIProxy.OpenDoorAsync(userHttpClient, TestConstants.TestDoorId);
 
             // Act
-            var userDoorAccessHistory = await DoorsAccessAPIProxy.GetDoorAccessHistoryAsync(adminHttpClient, TestUserId);
+            var userDoorAccessHistory = await DoorsAccessAPIProxy.GetDoorAccessHistoryAsync(adminHttpClient, TestConstants.TestUserId);
 
             // Assert
             Assert.AreEqual(HttpStatusCode.OK, userDoorAccessHistory.StatusCode);
             var eventLog = userDoorAccessHistory.Result.DoorEvents.SingleOrDefault();
             Assert.IsNotNull(eventLog);
-            Assert.IsTrue(eventLog.DoorId == TestDoorId && eventLog.UserId == TestUserId && eventLog.Event == DoorEvent.AccessGranted);
+            Assert.IsTrue(eventLog.DoorId == TestConstants.TestDoorId && eventLog.UserId == TestConstants.TestUserId && eventLog.Event == DoorEvent.AccessGranted);
         }
 
         [Test]

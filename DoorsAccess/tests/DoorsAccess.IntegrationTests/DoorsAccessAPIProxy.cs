@@ -6,10 +6,6 @@ namespace DoorsAccess.IntegrationTests
 {
     public class DoorsAccessAPIProxy
     {
-        public static async Task<HttpResponseMessage> CreateDoorAsync(HttpClient httpClient, CreateOrUpdateDoorRequest request)
-        {
-            return await httpClient.PutAsJsonAsync($"v1/doors/{request.DoorId}", request);
-        }
 
         public static async Task<HttpResponseMessage> AllowDoorAccessAsync(HttpClient httpClient, long doorId, AllowDoorAccessRequest request)
         {
@@ -35,6 +31,11 @@ namespace DoorsAccess.IntegrationTests
             var getDoorHistoryResponse = await HttpResponseFactory.CreateAsync<DoorsAccessHistoryResponse>(responseMessage);
 
             return getDoorHistoryResponse;
+        }
+
+        public static async Task<HttpResponseMessage> CreateDoorAsync(HttpClient httpClient, CreateOrUpdateDoorRequest request)
+        {
+            return await httpClient.PutAsJsonAsync($"v1/doors/{request.DoorId}", request);
         }
 
         public static async Task<HttpResponse<GetDoorResponse?>> GetDoorAsync(HttpClient httpClient, long doorId)

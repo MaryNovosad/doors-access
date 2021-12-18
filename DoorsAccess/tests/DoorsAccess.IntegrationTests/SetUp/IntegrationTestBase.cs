@@ -14,14 +14,6 @@ namespace DoorsAccess.IntegrationTests.SetUp
         private readonly TestServer _testServer;
         private readonly DbInstaller _dbInstaller;
 
-        protected const long TestDoorId = 1;
-
-        protected const long TestUserId = 2;
-        protected const string TestUserRole = "User";
-
-        protected const long TestAdminId = 2;
-        protected const string TestAdminRole = "Admin";
-
         public IntegrationTestBase()
         {
             _config = new ConfigurationManager().AddJsonFile("appsettings.json").Build();
@@ -55,7 +47,7 @@ namespace DoorsAccess.IntegrationTests.SetUp
             return new TestServer(builder);
         }
 
-        protected HttpClient CreateHttpClient(long userId = TestUserId, string role = TestUserRole)
+        protected HttpClient CreateHttpClient(long userId = TestConstants.TestUserId, string role = TestConstants.TestUserRole)
         {
             var httpClient = _testServer.CreateClient();
 
