@@ -1,8 +1,10 @@
-﻿using DoorsAccess.DAL;
-using DoorsAccess.DAL.Repositories;
+﻿using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.Exceptions;
 using DoorsAccess.Domain.Utils;
-using DoorsAccess.IoT.Integration;
+using DoorsAccess.Messaging;
+using DoorsAccess.Messaging.Messages;
+using DoorsAccess.Models;
+using DoorsAccess.Models.Enums;
 using Microsoft.Extensions.Logging;
 
 namespace DoorsAccess.Domain
@@ -11,20 +13,20 @@ namespace DoorsAccess.Domain
     {
         private readonly IDoorRepository _doorRepository;
         private readonly IDoorAccessRepository _doorAccessRepository;
-        private readonly IIoTDeviceProxy _ioTDeviceProxy;
+        private readonly IDoorAccessMessageSender _doorAccessMessageSender;
         private readonly IDoorEventLogRepository _doorEventLogRepository;
         private readonly IClock _clock;
         private readonly ILogger<DoorsAccessService> _logger;
 
         public DoorsAccessService(IDoorRepository doorRepository, IDoorAccessRepository doorAccessRepository,
-            IIoTDeviceProxy ioTDoorProxy, IDoorEventLogRepository doorEventLogRepository, IClock clock, ILogger<DoorsAccessService> logger)
+            IDoorEventLogRepository doorEventLogRepository, IDoorAccessMessageSender messageSender, IClock clock, ILogger<DoorsAccessService> logger)
         {
-            _doorRepository = doorRepository;
-            _doorAccessRepository = doorAccessRepository;
-            _ioTDeviceProxy = ioTDoorProxy;
-            _doorEventLogRepository = doorEventLogRepository;
-            _clock = clock;
-            _logger = logger;
+            _doorRepository = doorRepository ?? throw new ArgumentNullException(nameof(doorRepository));
+            _doorAccessRepository = doorAccessRepository ?? throw new ArgumentNullException(nameof(doorAccessRepository));
+            _doorEventLogRepository = doorEventLogRepository ?? throw new ArgumentNullException(nameof(doorEventLogRepository));
+            _doorAccessMessageSender = messageSender ?? throw new ArgumentNullException(nameof(messageSender));
+            _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
         public async Task OpenDoorAsync(long doorId, long userId)
@@ -36,28 +38,45 @@ namespace DoorsAccess.Domain
                 throw new DomainException(DomainErrorType.NotFound, $"Door {doorId} does not exist");
             }
 
+            var now = _clock.UtcNow();
             var doorEvent = await DetermineDoorEventAsync(door, userId);
 
             var doorEventLog = new DoorEventLog
             {
                 DoorId = door.Id,
                 UserId = userId,
-                Event = doorEvent,
-                TimeStamp = _clock.UtcNow()
+                EventType = doorEvent,
+                TimeStamp = now
             };
 
             await _doorEventLogRepository.AddAsync(doorEventLog);
 
+            // TODO: Uncomment when doors access historical events functionality is extracted to separate micro-service
+            //var message = new DoorAccessMessage(door.Id, userId, now, doorEvent);
+            //await _doorAccessMessageSender.SendAsync(message);
+
             switch (doorEvent)
             {
-                case DoorEvent.AccessGranted:
+                case DoorEventType.AccessGranted:
+                {
                     await _doorRepository.ChangeStateAsync(door.Id, DoorState.AccessGranted);
-                    _ioTDeviceProxy.OpenDoor(userId, doorId);
+
+                    var command = new DoorAccessCommand(door.Id, userId, now, DoorCommandType.Open);
+                    await _doorAccessMessageSender.SendAsync(command);
+
                     break;
-                case DoorEvent.AccessDenied:
+                }
+
+                case DoorEventType.AccessDenied:
+                {
                     throw new DomainException(DomainErrorType.AccessDenied, $"User {userId} doesn't have access to door {doorId}");
-                case DoorEvent.DeactivatedDoorAccessAttempt:
+                }
+
+                case DoorEventType.DeactivatedDoorAccessAttempt:
+                {
                     throw new DomainException(DomainErrorType.NotFound, $"User {userId} tries to access deactivated door {doorId}");
+                }
+
                 default:
                     throw new InvalidOperationException("Door event is not supported");
             }
@@ -101,21 +120,23 @@ namespace DoorsAccess.Domain
             _logger.LogInformation($"Users {string.Join(", ", usersIds)} are allowed to access door {doorId}");
         }
 
-        private async Task<DoorEvent> DetermineDoorEventAsync(Door door, long userId)
+        private async Task<DoorEventType> DetermineDoorEventAsync(Door door, long userId)
         {
             var userHasAccessToDoors = await _doorAccessRepository.CanAccessAsync(userId, door.Id);
 
             if (!userHasAccessToDoors)
             {
-                return DoorEvent.AccessDenied;
+                return DoorEventType.AccessDenied;
             }
 
             if (door.IsDeactivated)
             {
-                return DoorEvent.DeactivatedDoorAccessAttempt;
+                return DoorEventType.DeactivatedDoorAccessAttempt;
             }
 
-            return DoorEvent.AccessGranted;
+            return DoorEventType.AccessGranted;
         }
     }
+
+    
 }

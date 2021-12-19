@@ -1,6 +1,4 @@
-﻿using DoorsAccess.DAL;
-
-namespace DoorsAccess.Domain
+﻿namespace DoorsAccess.Domain
 {
     public interface IDoorsAccessService
     {

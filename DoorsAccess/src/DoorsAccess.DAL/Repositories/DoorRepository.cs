@@ -1,6 +1,8 @@
 ﻿using Dapper;
 using System.Data.SqlClient;
 using System.Threading.Tasks;
+using DoorsAccess.Models;
+using DoorsAccess.Models.Enums;
 
 namespace DoorsAccess.DAL.Repositories
 {

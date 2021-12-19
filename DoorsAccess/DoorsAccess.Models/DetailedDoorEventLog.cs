@@ -1,4 +1,4 @@
-﻿namespace DoorsAccess.DAL
+﻿namespace DoorsAccess.Models
 {
     public class DetailedDoorEventLog : DoorEventLog
     {

@@ -1,5 +1,5 @@
-﻿using DoorsAccess.DAL;
-using DoorsAccess.Domain.DTO;
+﻿using DoorsAccess.Domain.DTO;
+using DoorsAccess.Models;
 
 namespace DoorsAccess.Domain
 {

@@ -1,4 +1,4 @@
-﻿using DoorsAccess.DAL;
+﻿using DoorsAccess.Models;
 
 namespace DoorsAccess.Domain
 {

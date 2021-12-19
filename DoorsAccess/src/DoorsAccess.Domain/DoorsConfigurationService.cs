@@ -1,7 +1,7 @@
-﻿using DoorsAccess.DAL;
-using DoorsAccess.DAL.Repositories;
+﻿using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain.DTO;
 using DoorsAccess.Domain.Utils;
+using DoorsAccess.Models;
 using Microsoft.Extensions.Logging;
 
 namespace DoorsAccess.Domain;
@@ -14,9 +14,9 @@ public class DoorsConfigurationService : IDoorsConfigurationService
 
     public DoorsConfigurationService(IDoorRepository doorRepository, IClock clock, ILogger<DoorsConfigurationService> logger)
     {
-        _doorRepository = doorRepository;
-        _clock = clock;
-        _logger = logger;
+        _doorRepository = doorRepository ?? throw new ArgumentNullException(nameof(doorRepository));
+        _clock = clock ?? throw new ArgumentNullException(nameof(clock));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
     public async Task CreateOrUpdateDoorAsync(DoorInfo doorInfo)

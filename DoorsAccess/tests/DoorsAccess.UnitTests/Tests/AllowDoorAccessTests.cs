@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DoorsAccess.DAL;
 using DoorsAccess.Domain.Exceptions;
+using DoorsAccess.Models;
 using Moq;
 using NUnit.Framework;
 

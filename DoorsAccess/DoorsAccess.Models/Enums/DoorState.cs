@@ -1,4 +1,4 @@
-﻿namespace DoorsAccess.DAL
+﻿namespace DoorsAccess.Models.Enums
 {
     public enum DoorState
     {

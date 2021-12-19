@@ -1,5 +1,5 @@
-﻿using DoorsAccess.DAL;
-using DoorsAccess.DAL.Repositories;
+﻿using DoorsAccess.DAL.Repositories;
+using DoorsAccess.Models;
 
 namespace DoorsAccess.Domain;
 
@@ -9,7 +9,7 @@ public class DoorsAccessHistoryService : IDoorsAccessHistoryService
 
     public DoorsAccessHistoryService(IDoorEventLogRepository doorEventLogRepository)
     {
-        _doorEventLogRepository = doorEventLogRepository;
+        _doorEventLogRepository = doorEventLogRepository ?? throw new ArgumentNullException(nameof(doorEventLogRepository));
     }
 
     public async Task<IList<DetailedDoorEventLog>> GetDoorAccessHistoryAsync(long userId)

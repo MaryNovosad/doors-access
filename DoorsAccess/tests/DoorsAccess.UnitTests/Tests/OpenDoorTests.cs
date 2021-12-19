@@ -1,6 +1,9 @@
 ﻿using System.Threading.Tasks;
-using DoorsAccess.DAL;
 using DoorsAccess.Domain.Exceptions;
+using DoorsAccess.Messaging;
+using DoorsAccess.Messaging.Messages;
+using DoorsAccess.Models;
+using DoorsAccess.Models.Enums;
 using Moq;
 using NUnit.Framework;
 
@@ -23,7 +26,7 @@ namespace DoorsAccess.UnitTests.Tests
         }
 
         [Test]
-        public async Task When_DoorExists_And_UserHasDoorAccess_Then_IoTDeviceIsNotifiedToOpenDoor()
+        public async Task When_DoorExists_And_UserHasDoorAccess_Then_OpenDoorAccessCommandMessageIsSent()
         {
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create());
@@ -33,7 +36,8 @@ namespace DoorsAccess.UnitTests.Tests
             await _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId);
 
             // Assert
-            _ioTDeviceProxyMock.Verify(r => r.OpenDoor(TestConstants.UserId, TestConstants.DoorId), Times.Once);
+            _messageSenderMock.Verify(s => s.SendAsync(
+                It.Is<DoorAccessCommand>(m => m.UserId == TestConstants.UserId && m.DoorId == TestConstants.DoorId && m.Type == DoorCommandType.Open)), Times.Once);
         }
 
         [Test]
@@ -48,7 +52,7 @@ namespace DoorsAccess.UnitTests.Tests
 
             // Assert
             _doorEventLogRepositoryMock.Verify(r => r.AddAsync(
-                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.Event == DoorEvent.AccessGranted)));
+                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.EventType == DoorEventType.AccessGranted)));
         }
 
         [Test]
@@ -68,11 +72,11 @@ namespace DoorsAccess.UnitTests.Tests
         }
 
         [Test]
-        public void When_DoorDoesNotExists_Then_IoTDeviceIsNotNotified()
+        public void When_DoorDoesNotExists_Then_DoorAccessCommandMessageIsNotSent()
         {
             // Act & Assert
             Assert.ThrowsAsync<DomainException>(() => _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId));
-            _ioTDeviceProxyMock.Verify(r => r.OpenDoor(TestConstants.UserId, TestConstants.DoorId), Times.Never);
+            _messageSenderMock.Verify(s => s.SendAsync(It.IsAny<DoorAccessCommand>()), Times.Never);
         }
 
         [Test]
@@ -103,7 +107,7 @@ namespace DoorsAccess.UnitTests.Tests
             // Act & Assert
             Assert.ThrowsAsync<DomainException>(() => _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId));
             _doorEventLogRepositoryMock.Verify(r => r.AddAsync(
-                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.Event == DoorEvent.AccessDenied)));
+                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.EventType == DoorEventType.AccessDenied)));
         }
 
         [Test]
@@ -118,14 +122,14 @@ namespace DoorsAccess.UnitTests.Tests
         }
 
         [Test]
-        public void When_DoorExists_But_UserDoesNotHaveDoorAccess_Then_IoTDeviceIsNotNotified()
+        public void When_DoorExists_But_UserDoesNotHaveDoorAccess_Then_DoorAccessCommandMessageIsNotSent()
         {
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create());
 
             // Act & Assert
             Assert.ThrowsAsync<DomainException>(() => _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId));
-            _ioTDeviceProxyMock.Verify(r => r.OpenDoor(TestConstants.UserId, TestConstants.DoorId), Times.Never);
+            _messageSenderMock.Verify(s => s.SendAsync(It.IsAny<DoorAccessCommand>()), Times.Never);
         }
 
         [Test]
@@ -150,11 +154,11 @@ namespace DoorsAccess.UnitTests.Tests
             // Act & Assert
             Assert.ThrowsAsync<DomainException>(() => _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId));
             _doorEventLogRepositoryMock.Verify(r => r.AddAsync(
-                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.Event == DoorEvent.DeactivatedDoorAccessAttempt)));
+                It.Is<DoorEventLog>(l => l.UserId == TestConstants.UserId && l.DoorId == TestConstants.DoorId && l.EventType == DoorEventType.DeactivatedDoorAccessAttempt)));
         }
 
         [Test]
-        public void When_DeactivatedDoorExists_And_UserHasDoorAccess_Then_IoTDeviceIsNotNotified()
+        public void When_DeactivatedDoorExists_And_UserHasDoorAccess_Then_DoorAccessCommandMessageIsNotSent()
         {
             // Arrange
             _doorRepositoryMock.Setup(r => r.GetAsync(TestConstants.DoorId)).ReturnsAsync(TestDoorFactory.Create(isDeactivated: true));
@@ -162,7 +166,7 @@ namespace DoorsAccess.UnitTests.Tests
 
             // Act & Assert
             Assert.ThrowsAsync<DomainException>(() => _doorAccessService.OpenDoorAsync(TestConstants.DoorId, TestConstants.UserId));
-            _ioTDeviceProxyMock.Verify(r => r.OpenDoor(TestConstants.UserId, TestConstants.DoorId), Times.Never);
+            _messageSenderMock.Verify(s => s.SendAsync(It.IsAny<DoorAccessCommand>()), Times.Never);
         }
 
         [Test]

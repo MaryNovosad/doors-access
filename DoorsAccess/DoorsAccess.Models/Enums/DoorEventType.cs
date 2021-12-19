@@ -1,6 +1,6 @@
-﻿namespace DoorsAccess.DAL
+﻿namespace DoorsAccess.Models.Enums
 {
-    public enum DoorEvent
+    public enum DoorEventType
     {
         AccessGranted = 1,
         AccessDenied = 2,

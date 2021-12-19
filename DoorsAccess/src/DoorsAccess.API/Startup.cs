@@ -1,3 +1,4 @@
+using Azure.Messaging.ServiceBus;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DoorsAccess.API.Infrastructure;
 using DoorsAccess.Domain.Utils;
-using DoorsAccess.IoT.Integration;
+using DoorsAccess.Messaging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
@@ -27,7 +28,12 @@ namespace DoorsAccess.API
             services.AddTransient<IDoorsConfigurationService, DoorsConfigurationService>();
             services.AddTransient<IDoorsAccessHistoryService, DoorsAccessHistoryService>();
 
-            services.AddTransient<IIoTDeviceProxy, IoTDeviceProxyMock>();
+            var serviceBusOptions = new DoorAccessServiceBusSenderOptions();
+            Configuration.GetSection("Messaging:ServiceBus").Bind(serviceBusOptions);
+
+            services.AddSingleton(_ => new ServiceBusClient(serviceBusOptions.ConnectionString));
+
+            services.AddSingleton<IDoorAccessMessageSender, DoorAccessServiceBusSender>();
 
             var dbConnectionString = Configuration.GetConnectionString("DoorsAccessDb");
 

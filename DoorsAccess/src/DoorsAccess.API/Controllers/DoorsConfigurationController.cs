@@ -1,10 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DoorsAccess.API.Requests;
 using DoorsAccess.API.Responses;
-using DoorsAccess.DAL;
 using DoorsAccess.Domain;
 using DoorsAccess.Domain.DTO;
+using DoorsAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

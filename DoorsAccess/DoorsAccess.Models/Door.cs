@@ -1,6 +1,7 @@
 ﻿using System;
+using DoorsAccess.Models.Enums;
 
-namespace DoorsAccess.DAL
+namespace DoorsAccess.Models
 {
     public class Door
     {

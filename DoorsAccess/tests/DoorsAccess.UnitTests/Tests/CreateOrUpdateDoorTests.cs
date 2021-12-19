@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading.Tasks;
-using DoorsAccess.DAL;
 using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using DoorsAccess.Domain.DTO;
 using DoorsAccess.Domain.Utils;
+using DoorsAccess.Models;
+using DoorsAccess.Models.Enums;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;

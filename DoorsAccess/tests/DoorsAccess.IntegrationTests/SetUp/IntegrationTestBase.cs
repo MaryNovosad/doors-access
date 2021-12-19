@@ -1,10 +1,13 @@
 ﻿using DoorsAccess.API;
+using DoorsAccess.Messaging;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Moq;
 
 namespace DoorsAccess.IntegrationTests.SetUp
 {
@@ -42,6 +45,11 @@ namespace DoorsAccess.IntegrationTests.SetUp
                     services
                         .AddAuthentication("Test")
                         .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
+
+                    var mockedMessageSender = Mock.Of<IDoorAccessMessageSender>();
+
+                    var descriptor = new ServiceDescriptor(typeof(IDoorAccessMessageSender), mockedMessageSender);
+                    services.Replace(descriptor);
                 }); 
 
             return new TestServer(builder);

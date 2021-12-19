@@ -33,7 +33,7 @@ BEGIN
 	(
 		[DoorId] [bigint] NOT NULL,
 		[UserId] [bigint] NOT NULL,
-		[Event] [tinyint] NOT NULL,
+		[EventType] [tinyint] NOT NULL,
 		[TimeStamp] [datetime2] NOT NULL,
 		CONSTRAINT [FK_door_event_log_door] FOREIGN KEY ([DoorId]) REFERENCES [dbo].[door] ([Id])
 	)

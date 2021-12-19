@@ -4,8 +4,8 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using DoorsAccess.API.Responses;
-using DoorsAccess.DAL;
 using DoorsAccess.Domain;
+using DoorsAccess.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,7 +66,7 @@ namespace DoorsAccess.API.Controllers
                     DoorId = l.DoorId,
                     DoorName = l.DoorName,
                     IsDoorDeactivated = l.IsDoorDeactivated,
-                    Event = (Responses.DoorEvent)l.Event,
+                    Event = (Responses.DoorEvent)l.EventType,
                     TimeStamp = l.TimeStamp
                 }).ToList()
             };

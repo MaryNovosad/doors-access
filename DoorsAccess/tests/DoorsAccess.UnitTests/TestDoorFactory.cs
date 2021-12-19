@@ -1,4 +1,5 @@
-using DoorsAccess.DAL;
+using DoorsAccess.Models;
+using DoorsAccess.Models.Enums;
 
 namespace DoorsAccess.UnitTests;
 
