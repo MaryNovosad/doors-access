@@ -1,5 +1,4 @@
 using Azure.Messaging.ServiceBus;
-using DoorsAccess.DAL.Repositories;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -7,8 +6,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DoorsAccess.API.Infrastructure;
+using DoorsAccess.DAL;
 using DoorsAccess.Domain.Utils;
 using DoorsAccess.Messaging;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
@@ -30,6 +31,8 @@ namespace DoorsAccess.API
 
             var serviceBusOptions = new DoorAccessServiceBusSenderOptions();
             Configuration.GetSection("Messaging:ServiceBus").Bind(serviceBusOptions);
+
+            services.Configure<DoorAccessServiceBusSenderOptions>(Configuration.GetSection("Messaging:ServiceBus"));
 
             services.AddSingleton(_ => new ServiceBusClient(serviceBusOptions.ConnectionString));
 
@@ -67,8 +70,12 @@ namespace DoorsAccess.API
             app.UseHsts();
 
             app.UseHttpsRedirection();
-            app.UseSwagger();
-            app.UseSwaggerUI();
+
+            if (env.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
 
             app.UseRouting();
 

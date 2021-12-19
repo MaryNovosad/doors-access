@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DoorsAccess.Models;
 
-namespace DoorsAccess.DAL.Repositories
+namespace DoorsAccess.DAL
 {
     public interface IDoorAccessRepository
     {

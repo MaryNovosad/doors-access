@@ -14,10 +14,12 @@ namespace DoorsAccess.API.Controllers
     public class DoorsController : ControllerBase
     {
         private readonly IDoorsAccessService _doorsAccessService;
+        private IDoorsAccessHistoryService _doorsAccessHistoryService;
 
-        public DoorsController(IDoorsAccessService doorsAccessService)
+        public DoorsController(IDoorsAccessService doorsAccessService, IDoorsAccessHistoryService doorsAccessHistoryService)
         {
             _doorsAccessService = doorsAccessService;
+            _doorsAccessHistoryService = doorsAccessHistoryService;
         }
 
         [HttpPut("{doorId:long}/state/open")]

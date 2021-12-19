@@ -11,10 +11,4 @@ namespace DoorsAccess.Messaging.Messages
 
         public DoorCommandType Type { get; }
     }
-
-    public enum DoorCommandType
-    {
-        Open = 1,
-        Close = 2
-    }
 }

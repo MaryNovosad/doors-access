@@ -1,11 +1,11 @@
-﻿using Dapper;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
+using Dapper;
 using DoorsAccess.Models;
 
-namespace DoorsAccess.DAL.Repositories
+namespace DoorsAccess.DAL
 {
     public class DoorAccessRepository : IDoorAccessRepository
     {

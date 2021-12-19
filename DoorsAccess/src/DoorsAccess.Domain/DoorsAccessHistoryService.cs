@@ -1,4 +1,4 @@
-﻿using DoorsAccess.DAL.Repositories;
+﻿using DoorsAccess.DAL;
 using DoorsAccess.Models;
 
 namespace DoorsAccess.Domain;

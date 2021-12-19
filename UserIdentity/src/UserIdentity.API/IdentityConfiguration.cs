@@ -37,13 +37,13 @@ internal class IdentityConfiguration
         new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
-            new IdentityResources.Profile(),
+            new IdentityResources.Profile()
         };
 
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ("DoorAccessAPI", "Door Access API")
+            new ("DoorAccessAPI", "Door Access API", new List<string>{ JwtClaimTypes.Role })
         };
 
     public static IEnumerable<TestUser> TestUsers =>

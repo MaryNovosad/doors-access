@@ -1,10 +1,10 @@
-﻿using Dapper;
-using System.Data.SqlClient;
+﻿using System.Data.SqlClient;
 using System.Threading.Tasks;
+using Dapper;
 using DoorsAccess.Models;
 using DoorsAccess.Models.Enums;
 
-namespace DoorsAccess.DAL.Repositories
+namespace DoorsAccess.DAL
 {
     public class DoorRepository : IDoorRepository
     {
