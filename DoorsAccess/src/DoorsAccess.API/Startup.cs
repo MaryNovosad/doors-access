@@ -62,6 +62,8 @@ namespace DoorsAccess.API
 
             services.AddLogging();
             services.AddControllers();
+            services.AddMvc().AddNewtonsoftJson();
+
             services.AddSwaggerGen();
         }
 
