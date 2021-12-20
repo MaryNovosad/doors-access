@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DoorsAccess.Messaging\DoorsAccess.Messaging.csproj" />
     <ProjectReference Include="..\DoorsAccess.DAL\DoorsAccess.DAL.csproj" />
+    <ProjectReference Include="..\DoorsAccess.Messaging\DoorsAccess.Messaging.csproj" />
   </ItemGroup>
 
 </Project>

@@ -13,9 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoorsAccess.UnitTests", "te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DoorsAccess.IntegrationTests", "tests\DoorsAccess.IntegrationTests\DoorsAccess.IntegrationTests.csproj", "{9C76EF38-246C-4E58-8358-C1C7F941CE69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorsAccess.Messaging", "DoorsAccess.Messaging\DoorsAccess.Messaging.csproj", "{D02055A5-B431-45E2-B7DF-45F3FAE392E3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorsAccess.Messaging", "src\DoorsAccess.Messaging\DoorsAccess.Messaging.csproj", "{D02055A5-B431-45E2-B7DF-45F3FAE392E3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorsAccess.Models", "DoorsAccess.Models\DoorsAccess.Models.csproj", "{994401D8-DC98-4BDC-B327-B4F6093D54AB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DoorsAccess.Models", "src\DoorsAccess.Models\DoorsAccess.Models.csproj", "{994401D8-DC98-4BDC-B327-B4F6093D54AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

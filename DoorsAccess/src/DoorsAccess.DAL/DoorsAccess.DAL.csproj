@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DoorsAccess.Models\DoorsAccess.Models.csproj" />
+    <ProjectReference Include="..\DoorsAccess.Models\DoorsAccess.Models.csproj" />
   </ItemGroup>
 
 </Project>
