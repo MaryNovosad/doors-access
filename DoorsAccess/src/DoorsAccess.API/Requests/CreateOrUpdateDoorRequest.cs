@@ -11,5 +11,5 @@ public class CreateOrUpdateDoorRequest
     [MaxLength(30)]
     public string DoorName { get; set; }
 
-    public bool IsDeactivated { get; set; } = false;
+    public bool IsDeactivated { get; set; }
 }

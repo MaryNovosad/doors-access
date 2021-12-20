@@ -12,10 +12,8 @@ namespace DoorsAccess.API.Infrastructure
 {
     public static class ExceptionMiddlewareExtensions
     {
-        public static void ConfigureExceptionMiddleware(this IApplicationBuilder app)
+        public static void ConfigureExceptionMiddleware(this IApplicationBuilder app, ILogger<IApplicationBuilder> logger)
         {
-            var logger = app.ApplicationServices.GetService<ILogger<IApplicationBuilder>>();
-
             app.UseExceptionHandler(builder =>
             {
                 builder.Run(async context =>

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Azure.Messaging.ServiceBus;
 using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -10,6 +11,7 @@ using DoorsAccess.DAL;
 using DoorsAccess.Domain.Utils;
 using DoorsAccess.Messaging;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DoorsAccess.API
@@ -61,15 +63,18 @@ namespace DoorsAccess.API
                 });
 
             services.AddLogging();
-            services.AddControllers();
-            services.AddMvc().AddNewtonsoftJson();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
 
             services.AddSwaggerGen();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<IApplicationBuilder> logger)
         {
-            app.ConfigureExceptionMiddleware();
+            app.ConfigureExceptionMiddleware(logger);
 
             app.UseHsts();
 

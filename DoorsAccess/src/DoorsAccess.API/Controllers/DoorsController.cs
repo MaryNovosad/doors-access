@@ -1,9 +1,6 @@
-﻿using System;
-using DoorsAccess.Domain;
+﻿using DoorsAccess.Domain;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using DoorsAccess.API.Infrastructure;
 

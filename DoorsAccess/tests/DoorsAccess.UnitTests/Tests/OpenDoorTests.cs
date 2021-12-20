@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using DoorsAccess.Domain.Exceptions;
-using DoorsAccess.Messaging;
 using DoorsAccess.Messaging.Messages;
 using DoorsAccess.Models;
 using DoorsAccess.Models.Enums;
