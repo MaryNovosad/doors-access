@@ -51,7 +51,7 @@ namespace DoorsAccess.Domain
 
             await _doorEventLogRepository.AddAsync(doorEventLog);
 
-            // TODO: Uncomment when doors access historical events functionality is extracted to separate micro-service
+            // TODO: Uncomment when doors access historical events functionality is extracted to a separate micro-service
             //var message = new DoorAccessMessage(door.Id, userId, now, doorEvent);
             //await _doorAccessMessageSender.SendAsync(message);
 

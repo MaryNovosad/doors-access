@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DoorsAccess.API.Infrastructure;
 
 namespace DoorsAccess.API.Controllers
 {
@@ -14,25 +15,16 @@ namespace DoorsAccess.API.Controllers
     public class DoorsController : ControllerBase
     {
         private readonly IDoorsAccessService _doorsAccessService;
-        private IDoorsAccessHistoryService _doorsAccessHistoryService;
 
-        public DoorsController(IDoorsAccessService doorsAccessService, IDoorsAccessHistoryService doorsAccessHistoryService)
+        public DoorsController(IDoorsAccessService doorsAccessService)
         {
             _doorsAccessService = doorsAccessService;
-            _doorsAccessHistoryService = doorsAccessHistoryService;
         }
 
         [HttpPut("{doorId:long}/state/open")]
         public async Task<IActionResult> OpenDoor(long doorId)
         {
-            var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-            if (userIdClaim == null)
-            {
-                throw new InvalidOperationException($"User principal info is not complete: claim {ClaimTypes.NameIdentifier} is missing");
-            }
-
-            long.TryParse(userIdClaim.Value, out long userId);
+            var userId = HttpContext.User.GetUserId();
 
             await _doorsAccessService.OpenDoorAsync(doorId, userId);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using DoorsAccess.API.Infrastructure;
 using DoorsAccess.API.Responses;
 using DoorsAccess.Domain;
 using DoorsAccess.Models;
@@ -37,14 +38,7 @@ namespace DoorsAccess.API.Controllers
         {
             if (!HttpContext.User.IsInRole("Admin"))
             {
-                var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
-
-                if (userIdClaim == null)
-                {
-                    throw new InvalidOperationException($"User principal info is not complete: claim {ClaimTypes.NameIdentifier} is missing");
-                }
-
-                long.TryParse(userIdClaim.Value, out long userIdFromClaim);
+                var userIdFromClaim = HttpContext.User.GetUserId();
 
                 if (userIdFromClaim != userId)
                 {

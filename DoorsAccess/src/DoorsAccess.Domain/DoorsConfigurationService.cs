@@ -59,11 +59,11 @@ public class DoorsConfigurationService : IDoorsConfigurationService
         }
     }
 
-    public async Task ChangeActivationStateAsync(long doorId, bool isActivated)
+    public async Task ChangeActivationStateAsync(long doorId, bool isDeactivated)
     {
-        await _doorRepository.ChangeActivationStateAsync(doorId, isActivated);
+        await _doorRepository.ChangeActivationStateAsync(doorId, isDeactivated);
 
-        _logger.LogInformation($"Door {doorId} is {(isActivated ? "" : "de")}activated");
+        _logger.LogInformation($"Door {doorId} is {(isDeactivated ? "de" : "")}activated");
     }
 
     public async Task<Door?> GetDoorAsync(long doorId)

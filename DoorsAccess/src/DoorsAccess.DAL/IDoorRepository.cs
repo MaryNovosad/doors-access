@@ -10,6 +10,6 @@ namespace DoorsAccess.DAL
         Task CreateAsync(Door door);
         Task UpdateAsync(Door door);
         Task ChangeStateAsync(long doorId, DoorState state);
-        Task ChangeActivationStateAsync(long doorId, bool isActivated);
+        Task ChangeActivationStateAsync(long doorId, bool isDeactivated);
     }
 }

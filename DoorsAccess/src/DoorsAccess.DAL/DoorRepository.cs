@@ -40,12 +40,12 @@ namespace DoorsAccess.DAL
             await connection.ExecuteAsync(command, new { doorId, state });
         }
 
-        public async Task ChangeActivationStateAsync(long doorId, bool isActivated)
+        public async Task ChangeActivationStateAsync(long doorId, bool isDeactivated)
         {
             await using var connection = new SqlConnection(_connectionString);
 
             var command = "UPDATE [door] SET [IsDeactivated] = @IsDeactivated, [UpdatedAt] = GETDATE() WHERE [Id] = @DoorId";
-            await connection.ExecuteAsync(command, new { doorId, IsDeactivated = isActivated });
+            await connection.ExecuteAsync(command, new { doorId, IsDeactivated = isDeactivated });
         }
 
         public async Task<Door?> GetAsync(long doorId)

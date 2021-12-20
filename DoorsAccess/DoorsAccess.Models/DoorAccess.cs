@@ -12,6 +12,6 @@ namespace DoorsAccess.Models
 
         public DateTime CreatedAt { get; set; }
 
-        public bool IsDeactivated { get; set; } = false;
+        public bool IsDeactivated { get; set; } 
     }
 }

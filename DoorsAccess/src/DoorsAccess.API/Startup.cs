@@ -29,10 +29,12 @@ namespace DoorsAccess.API
             services.AddTransient<IDoorsConfigurationService, DoorsConfigurationService>();
             services.AddTransient<IDoorsAccessHistoryService, DoorsAccessHistoryService>();
 
-            var serviceBusOptions = new DoorAccessServiceBusSenderOptions();
-            Configuration.GetSection("Messaging:ServiceBus").Bind(serviceBusOptions);
+            var serviceBusSection = Configuration.GetSection("Messaging:ServiceBus");
 
-            services.Configure<DoorAccessServiceBusSenderOptions>(Configuration.GetSection("Messaging:ServiceBus"));
+            var serviceBusOptions = new DoorAccessServiceBusSenderOptions();
+            serviceBusSection.Bind(serviceBusOptions);
+
+            services.Configure<DoorAccessServiceBusSenderOptions>(serviceBusSection);
 
             services.AddSingleton(_ => new ServiceBusClient(serviceBusOptions.ConnectionString));
 

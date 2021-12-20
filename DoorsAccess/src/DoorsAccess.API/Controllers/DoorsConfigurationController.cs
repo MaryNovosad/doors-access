@@ -45,9 +45,9 @@ namespace DoorsAccess.API.Controllers
 
         [HttpPatch("{doorId:long}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ChangeDoorActivationState(long doorId, bool isActivated)
+        public async Task<IActionResult> ChangeDoorActivationState(long doorId, bool isDeactivated)
         {
-            await _doorsConfigurationService.ChangeActivationStateAsync(doorId, isActivated);
+            await _doorsConfigurationService.ChangeActivationStateAsync(doorId, isDeactivated);
 
             return Ok();
         }

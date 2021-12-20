@@ -28,7 +28,7 @@ internal class IdentityConfiguration
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
-                    "DoorAccessAPI"
+                    "DoorsAccessAPI"
                 }
             }
         };
@@ -43,7 +43,7 @@ internal class IdentityConfiguration
     public static IEnumerable<ApiScope> ApiScopes =>
         new List<ApiScope>
         {
-            new ("DoorAccessAPI", "Door Access API", new List<string>{ JwtClaimTypes.Role })
+            new ("DoorsAccessAPI", "Door Access API", new List<string>{ JwtClaimTypes.Role })
         };
 
     public static IEnumerable<TestUser> TestUsers =>
@@ -52,8 +52,8 @@ internal class IdentityConfiguration
             new()
             {
                 SubjectId = "1",
-                Username = "Bob",
-                Password = "BobPassword",
+                Username = "Admin",
+                Password = "AdminPassword",
                 Claims =
                 {
                     new Claim(JwtClaimTypes.Name, "Bob Smith"),
